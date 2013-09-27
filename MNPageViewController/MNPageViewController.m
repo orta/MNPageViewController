@@ -43,6 +43,8 @@
   scrollView.delegate = self;
   scrollView.contentOffset = CGPointMake(bounds.size.width, 0.f);
   scrollView.scrollsToTop = NO;
+//  scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
   self.scrollView = scrollView;
   
   [self.view addSubview:self.scrollView];
@@ -75,6 +77,8 @@
   
   self.scrollView.frame = bounds;
   self.scrollView.contentSize = CGSizeMake(bounds.size.width * 3.f, bounds.size.height);
+
+  [self relayoutChildViewControllers];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -85,11 +89,15 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
   [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-  
+  [self relayoutChildViewControllers];
+}
+
+- (void)relayoutChildViewControllers
+{
   CGRect bounds = self.view.bounds;
-  
+
   self.scrollView.contentOffset = CGPointMake(bounds.size.width, 0.f);
-  
+
   if (self.beforeController) {
     self.leftInset = 0.f;
     self.beforeController.view.frame = self.view.bounds;
@@ -102,7 +110,7 @@
   } else {
     self.rightInset = -bounds.size.width;
   }
-  
+
   bounds.origin.x = bounds.size.width;
   self.viewController.view.frame = bounds;
 
